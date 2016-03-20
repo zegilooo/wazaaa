@@ -13,6 +13,7 @@ mongoose.Promise = Promise
 
 import entriesController from './controllers/entries'
 import mainController from './controllers/main'
+import populateHelpers from './common/helpers'
 
 const app = express()
 const publicPath = joinPaths(__dirname, 'public')
@@ -32,6 +33,7 @@ app.use(csurf())
 app.use(flash())
 
 app.locals.title = 'Wazaaa'
+populateHelpers(app.locals)
 
 if (app.get('env') === 'development') {
   app.locals.pretty = true
