@@ -1,4 +1,6 @@
+import fetch from 'isomorphic-fetch'
 import { Router } from 'express'
+import unfluff from 'unfluff'
 
 const router = new Router()
 
@@ -15,8 +17,25 @@ function commentEntry (req, res) {
 }
 
 function createEntry (req, res) {
-  console.log(req.body)
-  res.send('COMING SOON')
+  fetch(req.body.url)
+  .then((res) => res.text())
+  .then((html) => {
+    const analysis = unfluff(html)
+    return {
+      excerpt: analysis.text.slice(0, 100) + '…',
+      tags: req.body.tags,
+      title: analysis.title,
+      url: req.body.url
+    }
+  })
+  .then((entry) => {
+    req.flash('success', `Votre bookmark « ${entry.title} » a bien été créé.`)
+    res.redirect('/entries') // FIXME
+  })
+  .catch((err) => {
+    req.flash('error', `Une erreur est survenue en traitant cette URL : ${err.message}`)
+    res.redirect('/entries/new')
+  })
 }
 
 function downvoteEntry (req, res) {
