@@ -1,0 +1,29 @@
+mixin navlink(linkUrl, glyph, label)
+  li(class= 0 === url.indexOf(linkUrl) ? 'active' : null)
+    a(href=linkUrl)
+      i.glyphicon(class="glyphicon-#{glyph}")
+      = ' ' + label
+
+mixin tagField(id)
+  input.form-control(id=id name="tags" placeholder="tag, tag…" value=query.tags data-tags=(tags || []))
+
+doctype html
+html(lang="fr")
+  head
+    meta(charset="utf-8")
+    title= pageTitle ? pageTitle + ' — ' + title : title
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    link(rel="stylesheet" href="/wazaaa.1.0.0.css")
+  body
+    .container
+      nav.navbar.navbar-default.navbar-static-top(role="navigation")
+        .navbar-header
+          a.navbar-brand(href="/")= title
+        ul.nav.navbar-nav
+          +navlink('/entries', 'list', 'Bookmarks')
+        if user
+          ul.nav.navbar-nav.navbar-right
+            +navlink('/users/logout', 'log-out', 'Déconnexion ' + user.name)
+      include _flashes
+      block content
+    script(src="/wazaaa.1.0.0.js")
