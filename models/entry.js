@@ -6,17 +6,31 @@ const entrySchema = new Schema({
   title: String,
   excerpt: String,
   postedAt: { type: Date, default: Date.now, index: true },
-  tags: { type: [String], index: true }
+  tags: { type: [String], index: true },
+
+  poster: { type: String, ref: 'User' },
+
+  comments: [{
+    text: { type: String, required: true },
+    author: { type: String, ref: 'User' },
+    postedAt: { type: Date, default: Date.now, index: true }
+  }]
 })
 
 Object.assign(entrySchema.statics, {
   getEntry (id) {
-    return this.findById(id).exec()
+    return this.findById(id).populate('poster comments.author').exec()
   },
 
   post (fields) {
     fields.tags = normalizeTags(fields.tags)
     return this.create(fields)
+  }
+})
+
+Object.assign(entrySchema.methods, {
+  comment (author, text) {
+    return this.update({ $push: { comments: { author, text } } }).exec()
   }
 })
 

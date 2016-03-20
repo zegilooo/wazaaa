@@ -7,11 +7,19 @@ import generateFakeEntry from '../fixtures/entries'
 
 import app from '../../app'
 import Entry from '../../models/entry'
+import User from '../../models/user'
 
 describe('Entries controller', () => {
+  let findStub
+
   before(() => {
     mongoose.models = {}
     mongoose.modelSchemas = {}
+    findStub = sinon.stub(User, 'findOne').returns(Promise.resolve({ _id: '@alphonse', name: 'Alphonse Robichu' }))
+  })
+
+  after(() => {
+    findStub.restore()
   })
 
   it('should route to listing on `/entries`', (done) => {
