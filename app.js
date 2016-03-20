@@ -7,6 +7,7 @@ import { join as joinPaths } from 'path'
 import logger from 'morgan'
 import methodOverride from 'method-override'
 import mongoose from 'mongoose'
+import passport from 'passport'
 
 import 'colors'
 
@@ -15,6 +16,7 @@ mongoose.Promise = Promise
 import entriesController from './controllers/entries'
 import mainController from './controllers/main'
 import populateHelpers from './common/helpers'
+import usersController from './controllers/users'
 
 const app = express()
 const publicPath = joinPaths(__dirname, 'public')
@@ -33,6 +35,8 @@ if (app.get('env') !== 'test') {
 app.use(cookieSession({ name: 'wazaaa:session', secret: 'Node.js c’est de la balle !' }))
 app.use(csurf())
 app.use(flash())
+app.use(passport.initialize())
+app.use(passport.session())
 
 app.locals.title = 'Wazaaa'
 populateHelpers(app.locals)
@@ -41,21 +45,17 @@ if (app.get('env') === 'development') {
   app.locals.pretty = true
 }
 
-import User from './models/user'
-
 app.use((req, res, next) => {
   res.locals.csrfToken = req.csrfToken()
   res.locals.flash = req.flash()
   res.locals.query = req.query
   res.locals.url = req.url
-  // FIXME
-  User.findOne().then((user) => {
-    res.locals.user = req.user = user
-    next()
-  })
+  res.locals.user = req.user
+  next()
 })
 
 app.use(mainController)
 app.use('/entries', entriesController)
+app.use('/users', usersController)
 
 export default app

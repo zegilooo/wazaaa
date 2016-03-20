@@ -13,6 +13,29 @@ passport.use(new TwitterStrategy({
   User.findOrCreateByAuth(`@${profile.username}`, profile.displayName, 'twitter', done)
 }))
 
+passport.serializeUser((id, done) => {
+  done(null, id)
+})
+
+passport.deserializeUser((id, done) => {
+  User.findById(id, done)
+})
+
 const router = new Router()
+
+router.get('/get-in/twitter', passport.authenticate('twitter'))
+router.get('/auth/twitter/callback', passport.authenticate('twitter', {
+  successRedirect: '/entries',
+  failureRedirect: '/',
+  failureFlash: true
+}))
+
+router.get('/logout', logout)
+
+function logout (req, res) {
+  req.logout()
+  req.flash('success', 'Vous avez bien été déconnecté-e')
+  res.redirect('/')
+}
 
 export default router

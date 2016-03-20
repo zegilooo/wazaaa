@@ -6,6 +6,7 @@ import Entry from '../models/entry'
 
 const router = new Router()
 
+router.use(requireAuthentication)
 router.use('/:id', loadAndVerifyEntry)
 
 router.get('/', listEntries)
@@ -90,6 +91,15 @@ function loadAndVerifyEntry (req, res, next) {
 
 function newEntry (req, res) {
   res.render('entries/new', { pageTitle: 'Nouveau bookmark' })
+}
+
+function requireAuthentication (req, res, next) {
+  if (req.user) {
+    return next()
+  }
+
+  req.flash('info', 'Vous devez être authentifié-e pour consulter les bookmarks.')
+  res.redirect('/')
 }
 
 function showEntry (req, res) {
