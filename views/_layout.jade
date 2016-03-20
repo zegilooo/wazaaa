@@ -1,18 +1,26 @@
+//- Layout principal
+//- ================
+
+//- Mixin factorisant le balisage des liens de navigation
 mixin navlink(linkUrl, glyph, label)
+  //- La propriété `url` est mise à disposition des vues par notre petit middleware dans `server.js`.
   li(class= 0 === url.indexOf(linkUrl) ? 'active' : null)
     a(href=linkUrl)
       i.glyphicon(class="glyphicon-#{glyph}")
       = ' ' + label
 
+//- Mixin factorisant le balisage des champs de saisie des tags
 mixin tagField(id)
   input.form-control(id=id name="tags" placeholder="tag, tag…" value=query.tags data-tags=(tags || []))
 
+//- Balisage effectif du layout
 doctype html
 html(lang="fr")
   head
     meta(charset="utf-8")
     title= pageTitle ? pageTitle + ' — ' + title : title
     meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    //- Cette CSS est produite par Webpack
     link(rel="stylesheet" href="/wazaaa.1.0.0.css")
   body
     .container
@@ -26,4 +34,5 @@ html(lang="fr")
             +navlink('/users/logout', 'log-out', 'Déconnexion ' + user.name)
       include _flashes
       block content
+    //- Scripts synchrones à la fin, naturellement.  Ce JS est produit par Webpack.
     script(src="/wazaaa.1.0.0.js")
