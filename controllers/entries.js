@@ -49,7 +49,7 @@ function createEntry (req, res) {
 }
 
 function downvoteEntry (req, res) {
-  res.send('COMING SOON')
+  voteOnEntry(req, res, -1)
 }
 
 function listEntries (req, res) {
@@ -88,7 +88,22 @@ function showEntry (req, res) {
 }
 
 function upvoteEntry (req, res) {
-  res.send('COMING SOON')
+  voteOnEntry(req, res, +1)
+}
+
+function voteOnEntry (req, res, offset) {
+  const { entry, user } = req
+  if (entry.votedBy(user)) {
+    req.flash('error', 'Vous avez déjà voté pour ce bookmark…')
+    return res.redirect(`/entries/${entry.id}`)
+  }
+
+  entry.voteBy(user, offset)
+  .then(
+    () => req.flash('success', 'Votre vote a bien été pris en compte'),
+    (err) => req.flash('error', `Votre vote n’a pas pu être pris en compte : ${err.message}`)
+  )
+  .then(() => res.redirect(`/entries/${entry.id}`))
 }
 
 export default router

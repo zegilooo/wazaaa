@@ -5,6 +5,7 @@ import express from 'express'
 import flash from 'connect-flash'
 import { join as joinPaths } from 'path'
 import logger from 'morgan'
+import methodOverride from 'method-override'
 import mongoose from 'mongoose'
 
 import 'colors'
@@ -23,6 +24,7 @@ app.set('view engine', 'jade')
 
 app.use(express.static(publicPath))
 app.use(bodyParser.urlencoded({ extended: true }))
+app.use(methodOverride((req) => req.body._method))
 
 if (app.get('env') !== 'test') {
   app.use(logger(app.get('env') === 'development' ? 'dev' : 'combined'))
