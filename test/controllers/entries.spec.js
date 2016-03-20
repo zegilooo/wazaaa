@@ -54,6 +54,7 @@ describe('Entries controller', () => {
 
     it('should route to listing on authenticated `/entries`', sinon.test(function (done) {
       this.stub(Entry, 'getEntries').returns(Promise.resolve([]))
+      this.stub(Entry, 'tags').returns(Promise.resolve([]))
       this.stub(Entry, 'count').returns({
         exec () { return Promise.resolve(0) }
       })
@@ -88,13 +89,15 @@ describe('Entries controller', () => {
         })
     })
 
-    it('should render the entry creation form on `/entries/new`', (done) => {
+    it('should render the entry creation form on `/entries/new`', sinon.test(function (done) {
+      this.stub(Entry, 'tags').returns(Promise.resolve([]))
+
       request(app)
         .get('/entries/new')
         .expect(200)
         .expect(/Nouveau bookmark/)
         .end(done)
-    })
+    }))
 
     it('should trigger a proper-payload websocket broadcast on entry creation', sinon.test(function (done) {
       let spy

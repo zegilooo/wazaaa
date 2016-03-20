@@ -9,3 +9,4 @@ import moment from 'moment'
 moment.locale('fr')
 
 import './lib/notifications'
+import './lib/tags'

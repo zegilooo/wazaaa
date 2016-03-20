@@ -60,11 +60,12 @@ function downvoteEntry (req, res) {
 
 function listEntries (req, res) {
   Promise.all([
+    Entry.tags(),
     Entry.count().exec(),
     Entry.getEntries(req.query)
   ])
-  .then(([entryCount, entries]) => {
-    res.render('entries/index', { pageTitle: 'Les bookmarks', entries, entryCount })
+  .then(([tags, entryCount, entries]) => {
+    res.render('entries/index', { pageTitle: 'Les bookmarks', entries, entryCount, tags })
   })
   .catch((err) => {
     req.flash('error', `Impossible d’afficher les bookmarks : ${err.message}`)
@@ -95,7 +96,9 @@ function loadAndVerifyEntry (req, res, next) {
 }
 
 function newEntry (req, res) {
-  res.render('entries/new', { pageTitle: 'Nouveau bookmark' })
+  Entry.tags().then((tags) => {
+    res.render('entries/new', { pageTitle: 'Nouveau bookmark', tags })
+  })
 }
 
 function requireAuthentication (req, res, next) {
