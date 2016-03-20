@@ -22,13 +22,18 @@ describe('Entries controller', () => {
     findStub.restore()
   })
 
-  it('should route to listing on `/entries`', (done) => {
+  it('should route to listing on `/entries`', sinon.test(function (done) {
+    this.stub(Entry, 'getEntries').returns(Promise.resolve([]))
+    this.stub(Entry, 'count').returns({
+      exec () { return Promise.resolve(0) }
+    })
+
     request(app)
       .get('/entries')
       .expect(200)
       .expect(/bookmarks/)
       .end(done)
-  })
+  }))
 
   it('should load a valid entry URL just fine', sinon.test(function (done) {
     const entry = generateFakeEntry()

@@ -53,7 +53,17 @@ function downvoteEntry (req, res) {
 }
 
 function listEntries (req, res) {
-  res.render('entries/index', { pageTitle: 'Les bookmarks', entries: [] })
+  Promise.all([
+    Entry.count().exec(),
+    Entry.getEntries(req.query)
+  ])
+  .then(([entryCount, entries]) => {
+    res.render('entries/index', { pageTitle: 'Les bookmarks', entries, entryCount })
+  })
+  .catch((err) => {
+    req.flash('error', `Impossible d’afficher les bookmarks : ${err.message}`)
+    res.redirect('/')
+  })
 }
 
 const NON_RESOURCE_IDS = ['new']
