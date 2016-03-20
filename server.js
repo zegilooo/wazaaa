@@ -3,9 +3,11 @@ import { createServer } from 'http'
 import 'colors'
 
 import app from './app'
+import attachWebSockets from './controllers/web-sockets'
 import dbConnect from './models/connection'
 
 const server = createServer(app)
+attachWebSockets(server)
 dbConnect(() => {
   console.log('✔ Connection established to mongoDB database'.green)
 

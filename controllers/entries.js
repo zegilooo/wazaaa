@@ -3,6 +3,7 @@ import { Router } from 'express'
 import unfluff from 'unfluff'
 
 import Entry from '../models/entry'
+import ws from './web-sockets'
 
 const router = new Router()
 
@@ -40,6 +41,10 @@ function createEntry (req, res) {
     })
   })
   .then((entry) => {
+    const notif = entry.toJSON()
+    notif.poster = req.user
+    ws.sockets.emit('new-entry', notif)
+
     req.flash('success', `Votre bookmark « ${entry.title} » a bien été créé.`)
     res.redirect(`/entries/${entry.id}`)
   })

@@ -7,3 +7,5 @@ import 'bootstrap/dist/css/bootstrap.css'
 
 import moment from 'moment'
 moment.locale('fr')
+
+import './lib/notifications'

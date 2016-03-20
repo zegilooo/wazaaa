@@ -33,7 +33,11 @@ if (app.get('env') !== 'test') {
 }
 
 app.use(cookieSession({ name: 'wazaaa:session', secret: 'Node.js c’est de la balle !' }))
-app.use(csurf())
+
+if (app.get('env') !== 'test') {
+  app.use(csurf())
+}
+
 app.use(flash())
 app.use(passport.initialize())
 app.use(passport.session())
@@ -46,7 +50,9 @@ if (app.get('env') === 'development') {
 }
 
 app.use((req, res, next) => {
-  res.locals.csrfToken = req.csrfToken()
+  if (req.csrfToken) {
+    res.locals.csrfToken = req.csrfToken()
+  }
   res.locals.flash = req.flash()
   res.locals.query = req.query
   res.locals.url = req.url
