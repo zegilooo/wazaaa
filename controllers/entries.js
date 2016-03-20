@@ -15,6 +15,7 @@ function commentEntry (req, res) {
 }
 
 function createEntry (req, res) {
+  console.log(req.body)
   res.send('COMING SOON')
 }
 
