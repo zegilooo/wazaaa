@@ -5,8 +5,11 @@ import express from 'express'
 import flash from 'connect-flash'
 import { join as joinPaths } from 'path'
 import logger from 'morgan'
+import mongoose from 'mongoose'
 
 import 'colors'
+
+mongoose.Promise = Promise
 
 import entriesController from './controllers/entries'
 import mainController from './controllers/main'
