@@ -4,7 +4,7 @@
   "description": "Demo app used in Delicious Insights’ Node.js training course",
   "private": true,
   "engines": {
-    "node": ">= 4.2.x",
+    "node": ">= 6.0.0",
     "npm": ">= 3.8.0"
   },
   "scripts": {
@@ -22,10 +22,8 @@
     "validate": "npm test && npm ls"
   },
   "babel": {
-    "presets": [
-      "es2015",
-      "stage-2"
-    ]
+    "presets": ["node6"],
+    "plugins": ["transform-object-rest-spread"]
   },
   "standard": {
     "env": {
@@ -61,8 +59,8 @@
     "babel-core": "^6.9.1",
     "babel-eslint": "^6.0.0",
     "babel-loader": "^6.2.2",
-    "babel-preset-es2015": "^6.9.0",
-    "babel-preset-stage-2": "^6.5.0",
+    "babel-plugin-transform-object-rest-spread": "^6.8.0",
+    "babel-preset-node6": "^11.0.0",
     "body-parser": "^1.15.2",
     "bootstrap": "^3.3.6",
     "colors": "^1.0.3",
